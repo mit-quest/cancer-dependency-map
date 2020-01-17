@@ -1,0 +1,6 @@
+[submodule "genome-simulator"]
+	path = genome-simulator
+	url = git@github.com:mit-quest/genome-simulator.git
+[submodule "gene-expression-viz-bridge"]
+	path = gene-expression-viz-bridge
+	url = git@github.com:mit-quest/gene-expression-viz-bridge.git
