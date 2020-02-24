@@ -2,20 +2,16 @@ variable "username" {}
 variable "region" {}
 variable "region_zone" {}
 variable "folder_name" {}
+variable "host_name" {}
 variable "number_of_cpus" {}
 variable "ram_size_mb" {}
-variable "project" {
-  description = "The ID of the Google Cloud project"
-}
-variable "credentials_file_path" {
-  description = "Path to the JSON file used to describe your account credentials"
-}
-variable "public_key_path" {
-  description = "Path to file containing public key"
-}
-variable "private_key_path" {
-  description = "Path to file containing private key"
-}
+variable "project" {}
+variable "credentials_file_path" {}
+variable "public_key_path" {}
+variable "private_key_path" {}
+variable "image" {}
+variable "port" {}
+variable "data_dir_path" {}
 
 
 provider "google" {
@@ -41,7 +37,7 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   metadata = {
-    ssh-keys = "root:${file(var.public_key_path)}"
+    ssh-keys = "${var.username}:${file(var.public_key_path)}"
   }
 
   service_account {
@@ -56,10 +52,55 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "file" {
-    source = "../scripts"
-    destination = "~/scripts"
+    source = "../scripts/remote/${var.image}.sh"
+    destination = "~/"
     connection {
-      user = "root"
+      user = var.username
+      type = "ssh"
+      private_key = file(var.private_key_path)
+      host = google_compute_address.vm_static_ip.address
+    }
+  }
+
+  provisioner "file" {
+    source = var.credentials_file_path
+    destination = var.credentials_file_path
+    connection {
+      user = var.username
+      type = "ssh"
+      private_key = file(var.private_key_path)
+      host = self.network_interface[0].access_config[0].nat_ip
+    }
+  }
+
+  provisioner "file" {
+    source = var.public_key_path
+    destination = var.public_key_path
+    connection {
+      user = var.username
+      type = "ssh"
+      private_key = file(var.private_key_path)
+      host = self.network_interface[0].access_config[0].nat_ip
+    }
+  }
+
+  provisioner "file" {
+    source = var.data_dir_path
+    destination = "~/data"
+    connection {
+      user = var.username
+      type = "ssh"
+      private_key = file(var.private_key_path)
+      host = self.network_interface[0].access_config[0].nat_ip
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "bash ~/${var.image}.sh -cred ${var.credentials_file_path} -proj ${var.project} -host ${var.host_name} -port ${var.port} -pub ${var.public_key_path} -data ~/data"
+    ]
+    connection {
+      user = var.username
       type = "ssh"
       private_key = file(var.private_key_path)
       host = google_compute_address.vm_static_ip.address
@@ -67,29 +108,7 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "local-exec" {
-    command = "echo ${google_compute_address.vm_static_ip.address} >> ip_address.txt"
-  }
-
-  provisioner "remote-exec" {
-    command = "echo ${google_compute_address.vm_static_ip.address} >> ip_address.txt"
-    connection {
-      type = "ssh"
-      user = "root"
-      timeout = "1m"
-      private_key = file(var.private_key_path)
-      host = google_compute_address.vm_static_ip.address
-    }
-  }
-
-  provisioner "remote-exec" {
-    script = "../scripts/run.sh"
-    connection {
-      type = "ssh"
-      user = "root"
-      timeout = "1m"
-      private_key = file(var.private_key_path)
-      host = google_compute_address.vm_static_ip.address
-    }
+    command = "bash ../scripts/local/${var.image}.sh -ip ${google_compute_address.vm_static_ip.address} -port ${var.port} -user ${var.username} -private ${var.private_key_path} -data ${var.data_dir_path}"
   }
 }
 
@@ -97,13 +116,13 @@ resource "google_compute_address" "vm_static_ip" {
   name = "${var.username}-${var.folder_name}-static-ip"
 }
 
-resource "google_compute_firewall" "default" {
+resource "google_compute_firewall" "vpc_firewall" {
   name    = "${var.username}-${var.folder_name}-firewall"
   network = google_compute_network.vpc_network.self_link
 
   allow {
     protocol = "tcp"
-    ports    = ["80"]
+    ports    = ["${var.port}"]
   }
 
   source_ranges = ["0.0.0.0/0"]

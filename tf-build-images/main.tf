@@ -3,7 +3,9 @@ variable "region" {}
 variable "region_zone" {}
 variable "folder_name" {}
 variable "host_name" {}
-variable "project_name" {
+variable "number_of_cpus" {}
+variable "ram_size_mb" {}
+variable "project" {
   description = "The ID of the Google Cloud project"
 }
 variable "credentials_file_path" {
@@ -19,7 +21,7 @@ variable "private_key_path" {
 
 provider "google" {
   region = var.region
-  project = var.project_name
+  project = var.project
   credentials = file(var.credentials_file_path)
 }
 
@@ -75,10 +77,7 @@ resource "google_compute_instance" "vm_instance" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.project_name} >> ~/cancer-dependency-map/project_name.txt",
-      "echo ${var.credentials_file_path} >> ~/cancer-dependency-map/credentials_file_path.txt",
-      "echo ${var.host_name} >> ~/cancer-dependency-map/host_name.txt",
-      "bash ~/cancer-dependency-map/scripts/build.sh"
+      "bash ~/cancer-dependency-map/scripts/build.sh -cred ${var.credentials_file_path} -proj ${var.project} -host ${var.host_name}"
     ]
     connection {
       user = var.username
