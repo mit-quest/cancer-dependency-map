@@ -66,7 +66,7 @@ resource "google_compute_instance" "vm_instance" {
 
   provisioner "file" {
     source = var.credentials_file_path
-    destination = var.credentials_file_path
+    destination = "~/Terraform.json"
     connection {
       user = var.username
       type = "ssh"
@@ -77,7 +77,7 @@ resource "google_compute_instance" "vm_instance" {
 
   provisioner "remote-exec" {
     inline = [
-      "bash ~/cancer-dependency-map/scripts/build.sh -cred ${var.credentials_file_path} -proj ${var.project} -host ${var.host_name}"
+      "bash ~/cancer-dependency-map/scripts/build.sh -c ~/Terraform.json -p ${var.project} -h ${var.host_name}"
     ]
     connection {
       user = var.username

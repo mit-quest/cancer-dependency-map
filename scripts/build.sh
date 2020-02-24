@@ -1,24 +1,27 @@
 # Read variables from arguments
-while getopts cred:proj:host: option
+while getopts c:p:h: option
 do
 case "${option}"
 in
-cred) CRED_PATH=${OPTARG};;
-proj) PROJ_ID=${OPTARG};;
-host) HOST_NAME=${OPTARG};;
+c) CRED_PATH=${OPTARG};;
+p) PROJ_ID=${OPTARG};;
+h) HOST_NAME=${OPTARG};;
 esac
 done
+
+pwd
 
 # Install Docker
 echo Installing docker
 sudo curl -sSL https://get.docker.com/ | sh
 
+# Login to Docker
+echo Logging in to Docker
+cat $CRED_PATH | sudo docker login -u _json_key --password-stdin $HOST_NAME
+
 # Pull the probcomp/notebook image from the official Docker Hub
 echo Pulling probcomp/notebook docker image from the official Docker Hub
 sudo docker pull probcomp/notebook
-
-# Login to Docker
-cat $CRED_PATH | docker login -u _json_key --password-stdin $HOST_NAME
 
 # Navigate to uploaded repository
 cd cancer-dependency-map
