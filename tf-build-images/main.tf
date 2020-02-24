@@ -26,7 +26,7 @@ provider "google" {
 }
 
 resource "google_compute_instance" "vm_instance" {
-  name = "${var.username}-${var.folder_name}-instance"
+  name = "${var.username}-${var.folder_name}"
   machine_type = "n1-standard-1"
   zone = var.region_zone
   tags = ["docker-node"]
