@@ -9,18 +9,14 @@ default: help
 build:
 	cd tf-build-images && terraform init && terraform apply && terraform destroy
 
-.PHONY: run
-run:
-	cd tf-run-containers && terraform init && terraform apply && terraform destroy
-
 .PHONY: public
 public:
-	bash scripts/public.sh
+	cd tf-run-containers && terraform init && terraform apply -var 'image=public' -var 'data_dir_path=$(realpath ./data/public)'
 
 .PHONY: private
 private:
-	bash scripts/private.sh
+	cd tf-run-containers && terraform init && terraform apply -var 'image=private' -var 'data_dir_path=$(realpath ./data/private)'
 
 .PHONY: visualize
 visualize:
-	bash scripts/visualize.sh
+	cd tf-run-containers && terraform init && terraform apply -var 'image=visualize' -var 'data_dir_path=$(realpath ./data/visualize)'
