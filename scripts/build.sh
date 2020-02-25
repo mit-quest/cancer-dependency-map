@@ -9,8 +9,6 @@ h) HOST_NAME=${OPTARG};;
 esac
 done
 
-pwd
-
 # Install Docker
 echo Installing docker
 sudo curl -sSL https://get.docker.com/ | sh

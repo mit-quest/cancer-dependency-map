@@ -1,13 +1,13 @@
 # Read variables from arguments
-while getopts ip:port:user:private:data: option
+while getopts i:p:u:v:d: option
 do
 case "${option}"
 in
-ip) IP=${OPTARG};;
-port) PORT=${OPTARG};;
-user) USER=${OPTARG};;
-private) PRIVATE_KEY_PATH=${OPTARG};;
-data) DATA_DIR_PATH=${OPTARG};;
+i) IP=${OPTARG};;
+p) PORT=${OPTARG};;
+u) USER=${OPTARG};;
+v) PRIVATE_KEY_PATH=${OPTARG};;
+d) DATA_DIR_PATH=${OPTARG};;
 esac
 done
 
@@ -18,4 +18,4 @@ scp -i $PRIVATE_KEY_PATH $USER@$IP:~/token.txt $DATA_DIR_PATH
 TOKEN=$(cat $DATA_DIR_PATH/token.txt)
 
 # Open website
-xdg-open $IP:$PORT/?token=$TOKEN
+xdg-open http://$IP:$PORT/?token=$TOKEN
