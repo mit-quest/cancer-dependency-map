@@ -12,4 +12,5 @@ esac
 done
 
 # Open website
-xdg-open http://$IP:$PORT
+echo Opening Clojure website
+xdg-open http://$IP:$PORT &

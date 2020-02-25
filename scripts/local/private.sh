@@ -12,13 +12,20 @@ esac
 done
 
 # Securely copy the token text from the VM
-scp -i $PRIVATE_KEY_PATH $USER@$IP:~/token.txt $DATA_DIR_PATH
+echo Copying Jupyter notebook token down to localhost
+scp -i $PRIVATE_KEY_PATH $USER@$IP:~/token.txt $DATA_DIR_PATH/token.txt
 
 # Securely copy the output JSON from the VM
-scp -i $PRIVATE_KEY_PATH $USER@$IP:~/results-Bridge-demo-Arac-part.json $(dirname $DATA_DIR_PATH)/visualize
+scp -i $PRIVATE_KEY_PATH $USER@$IP:~/results-Bridge-demo-Arac-part.json $(dirname $DATA_DIR_PATH)/visualize/results-Bridge-demo-Arac-part.json
 
 # Get the token string
+echo Grabbing Jupyter notebook token
 TOKEN=$(cat $DATA_DIR_PATH/token.txt)
 
 # Open website
-xdg-open http://$IP:$PORT/?token=$TOKEN
+echo Opening Jupyter notebook website
+xdg-open http://$IP:$PORT/?token=$TOKEN &
+
+# Remove IP from ssh known hosts
+echo Removing VM IP from ssh known hosts
+ssh-keygen -R $IP
