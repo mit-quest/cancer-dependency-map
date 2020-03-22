@@ -11,7 +11,8 @@ variable "public_key_path" {}
 variable "private_key_path" {}
 variable "image" {}
 variable "port" {}
-variable "data_dir_path" {}
+variable "this_dir_path" {}
+variable "trial_id" {}
 
 
 provider "google" {
@@ -21,11 +22,11 @@ provider "google" {
 }
 
 resource "google_compute_network" "vpc_network" {
-  name = "${var.username}-${var.folder_name}-network"
+  name = "${var.folder_name}-network-${var.username}"
 }
 
 resource "google_compute_instance" "vm_instance" {
-  name = "${var.username}-${var.folder_name}-${var.image}"
+  name = "${var.folder_name}-${var.image}-${var.username}"
   machine_type = "custom-${var.number_of_cpus}-${var.ram_size_mb}"
   zone = var.region_zone
   tags = ["docker-node"]
@@ -53,8 +54,8 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "file" {
-    source = "../scripts/remote/${var.image}.sh"
-    destination = "~/${var.image}.sh"
+    source = "${var.this_dir_path}/scripts/${var.image}/create.sh"
+    destination = "~/create.sh"
     connection {
       user = var.username
       type = "ssh"
@@ -76,21 +77,21 @@ resource "google_compute_instance" "vm_instance" {
     }
   }
 
-  provisioner "file" {
-    source = var.data_dir_path
-    destination = "~/data/"
-    connection {
-      user = var.username
-      type = "ssh"
-      private_key = file(var.private_key_path)
-      port = 22
-      host = google_compute_address.vm_static_ip.address
-    }
+  provisioner "local-exec" {
+    command = "echo bash ${var.this_dir_path}/scripts/${var.image}/start.sh -c ~/Terraform.json -i ${google_compute_address.vm_static_ip.address} -j ${var.project} -h ${var.host_name} -p ${var.port} -t ${var.trial_id} -f ${var.folder_name} -u ${var.username} -v ${var.private_key_path} > ${var.this_dir_path}/data/${var.image}/start.txt"
+  }
+
+  provisioner "local-exec" {
+    command = "echo bash ${var.this_dir_path}/scripts/${var.image}/open.sh -i ${google_compute_address.vm_static_ip.address} -p ${var.port} -u ${var.username} -v ${var.private_key_path} -d ${var.this_dir_path}/data/${var.image} -t ${var.trial_id} -f ${var.folder_name} > ${var.this_dir_path}/data/${var.image}/open.txt"
+  }
+
+  provisioner "local-exec" {
+    command = "echo bash ${var.this_dir_path}/scripts/${var.image}/save.sh -i ${google_compute_address.vm_static_ip.address} -p ${var.port} -u ${var.username} -v ${var.private_key_path} -d ${var.this_dir_path}/data/${var.image} -t ${var.trial_id} -f ${var.folder_name} > ${var.this_dir_path}/data/${var.image}/save.txt"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "bash ~/${var.image}.sh -c ~/Terraform.json -j ${var.project} -h ${var.host_name} -p ${var.port} -d ~/data/"
+      "bash ~/create.sh -c ~/Terraform.json -j ${var.project} -h ${var.host_name} -p ${var.port} -t ${var.trial_id} -f ${var.folder_name} -u ${var.username}"
     ]
     connection {
       user = var.username
@@ -100,18 +101,14 @@ resource "google_compute_instance" "vm_instance" {
       host = google_compute_address.vm_static_ip.address
     }
   }
-
-  provisioner "local-exec" {
-    command = "bash ../scripts/local/${var.image}.sh -i ${google_compute_address.vm_static_ip.address} -p ${var.port} -u ${var.username} -v ${var.private_key_path} -d ${var.data_dir_path}"
-  }
 }
 
 resource "google_compute_address" "vm_static_ip" {
-  name = "${var.username}-${var.folder_name}-static-ip"
+  name = "${var.folder_name}-static-ip-${var.username}"
 }
 
 resource "google_compute_firewall" "vpc_firewall" {
-  name    = "${var.username}-${var.folder_name}-firewall"
+  name    = "${var.folder_name}-firewall-${var.username}"
   network = google_compute_network.vpc_network.name
 
   allow {

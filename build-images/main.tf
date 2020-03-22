@@ -5,19 +5,11 @@ variable "folder_name" {}
 variable "host_name" {}
 variable "number_of_cpus" {}
 variable "ram_size_mb" {}
-variable "project" {
-  description = "The ID of the Google Cloud project"
-}
-variable "credentials_file_path" {
-  description = "Path to the JSON file used to describe your account credentials"
-}
-variable "public_key_path" {
-  description = "Path to file containing public key"
-}
-variable "private_key_path" {
-  description = "Path to file containing private key"
-}
-
+variable "project" {}
+variable "credentials_file_path" {}
+variable "public_key_path" {}
+variable "private_key_path" {}
+variable "this_dir_path" {}
 
 provider "google" {
   region = var.region
@@ -26,7 +18,7 @@ provider "google" {
 }
 
 resource "google_compute_instance" "vm_instance" {
-  name = "${var.username}-${var.folder_name}"
+  name = "${var.folder_name}-build-${var.username}"
   machine_type = "n1-standard-1"
   zone = var.region_zone
   tags = ["docker-node"]
@@ -54,8 +46,19 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "file" {
-    source = "../../cancer-dependency-map"
-    destination = "~/"
+    source = "${var.this_dir_path}/experiments"
+    destination = "~/experiments"
+    connection {
+      user = var.username
+      type = "ssh"
+      private_key = file(var.private_key_path)
+      host = self.network_interface[0].access_config[0].nat_ip
+    }
+  }
+
+  provisioner "file" {
+    source = "${var.this_dir_path}/scripts/build.sh"
+    destination = "~/build.sh"
     connection {
       user = var.username
       type = "ssh"
@@ -77,7 +80,7 @@ resource "google_compute_instance" "vm_instance" {
 
   provisioner "remote-exec" {
     inline = [
-      "bash ~/cancer-dependency-map/scripts/build.sh -c ~/Terraform.json -p ${var.project} -h ${var.host_name}"
+      "bash ~/build.sh -c ~/Terraform.json -j ${var.project} -h ${var.host_name} -f ${var.folder_name} -u ${var.username}"
     ]
     connection {
       user = var.username

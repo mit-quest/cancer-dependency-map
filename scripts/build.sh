@@ -1,13 +1,21 @@
+set -e
+
 # Read variables from arguments
-while getopts c:p:h: option
+while getopts c:j:h:f:u: option
 do
 case "${option}"
 in
 c) CRED_PATH=${OPTARG};;
-p) PROJ_ID=${OPTARG};;
+j) PROJ_ID=${OPTARG};;
 h) HOST_NAME=${OPTARG};;
+f) FOLDER_NAME=${OPTARG};;
+u) USER=${OPTARG};;
 esac
 done
+
+# Create GCP bucket for data transfer across experiments
+echo Creating GCP bucket
+gsutil mb gs://$FOLDER_NAME-bucket-$USER/
 
 # Install Docker
 echo Installing docker
@@ -21,32 +29,35 @@ cat $CRED_PATH | sudo docker login -u _json_key --password-stdin $HOST_NAME
 echo Pulling probcomp/notebook docker image from the official Docker Hub
 sudo docker pull probcomp/notebook
 
-# Navigate to uploaded repository
-cd cancer-dependency-map
+# Navigate to the experiments in the uploaded repository
+cd experiments
 
-# Build and push probcomp/rnaseq image
-echo Building probcomp/rnaseq docker image
+# Build and push the *public* image
+echo Building the *public* docker image
 cd gene-expression-public
-sudo docker build -t probcomp/rnaseq .
+PUBLIC=$FOLDER_NAME/public
+sudo docker build -t $PUBLIC .
 cd ..
-echo Pushing probcomp/rnaseq to Google Cloud registry
-sudo docker tag probcomp/rnaseq $HOST_NAME/$PROJ_ID/probcomp-rnaseq
-sudo docker push $HOST_NAME/$PROJ_ID/probcomp-rnaseq
+echo Pushing *public* to Google Cloud registry
+sudo docker tag $PUBLIC $HOST_NAME/$PROJ_ID/$PUBLIC
+sudo docker push $HOST_NAME/$PROJ_ID/$PUBLIC
 
-# Build and push probcomp/genome
-echo Building probcomp/genome docker image
+# Build and push the *private* image
+echo Building the *private* docker image
 cd genome-simulator
-sudo docker build -t probcomp/genome .
+PRIVATE=$FOLDER_NAME/private
+sudo docker build -t $PRIVATE .
 cd ..
-echo Pushing probcomp/genome to Google Cloud registry
-sudo docker tag probcomp/genome $HOST_NAME/$PROJ_ID/probcomp-genome
-sudo docker push $HOST_NAME/$PROJ_ID/probcomp-genome
+echo Pushing *private* to Google Cloud registry
+sudo docker tag $PRIVATE $HOST_NAME/$PROJ_ID/$PRIVATE
+sudo docker push $HOST_NAME/$PROJ_ID/$PRIVATE
 
-# Build probcomp/visualizer
-echo Building probcomp/visualizer docker image
+# Build and push the *visualize* image
+echo Building the *visualize* docker image
 cd gene-expression-viz-bridge
-sudo docker build -t probcomp/visualizer .
+VISUALIZE=$FOLDER_NAME/visualize
+sudo docker build -t $VISUALIZE .
 cd ..
-echo Pushing probcomp/visualizer to Google Cloud registry
-sudo docker tag probcomp/visualizer $HOST_NAME/$PROJ_ID/probcomp-visualizer
-sudo docker push $HOST_NAME/$PROJ_ID/probcomp-visualizer
+echo Pushing *visualize* to Google Cloud registry
+sudo docker tag $VISUALIZE $HOST_NAME/$PROJ_ID/$VISUALIZE
+sudo docker push $HOST_NAME/$PROJ_ID/$VISUALIZE
