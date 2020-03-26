@@ -15,7 +15,7 @@ synthesis and hypothesis testing on publicly available RNA sequencing data. See 
 
 [gene-expression-viz-bridge](https://github.com/mit-quest/gene-expression-viz-bridge) contains code to start the UI to examine the dependencies inferred from the genome simulator. See the [README](https://github.com/mit-quest/gene-expression-viz-bridge/blob/master/README.md) to get started.
 
-Note that `genome-simulator` and `gene-expression-viz-bridge` are [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+Note that `genome-simulator` and `gene-expression-viz-bridge` are [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules), so remember to run `git submodule init` and `git submodule update` after `git clone ____`.
 
 ## Getting started
 0. [Intro to Terraform](https://learn.hashicorp.com/terraform/gcp/intro)
