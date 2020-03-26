@@ -8,21 +8,21 @@ default: help
 .PHONY: build
 build:
 	cp tf.config build-images/terraform.tfvars
-	cd build-images && terraform init && terraform apply && terraform destroy
+	cd build-images && terraform init && terraform apply -auto-approve && terraform destroy -auto-approve
 
 .PHONY: public_create
 public_create:
 	cp tf.config run-containers/terraform.tfvars
-	cd run-containers && terraform init && terraform apply -var 'image=public' -var 'status=RUNNING'
+	cd run-containers && terraform init && terraform apply -var 'image=public' -var 'status=RUNNING' -auto-approve
 
 .PHONY: public_start
 public_start:
-	cd run-containers && terraform init && terraform apply -var 'image=public' -var 'status=RUNNING'
+	cd run-containers && terraform init && terraform apply -var 'image=public' -var 'status=RUNNING' -auto-approve
 	bash data/public/start.txt
 
 .PHONY: public_stop
 public_stop:
-	cd run-containers && terraform init && terraform apply -var 'image=public' -var 'status=TERMINATED'
+	cd run-containers && terraform init && terraform apply -var 'image=public' -var 'status=TERMINATED' -auto-approve
 
 .PHONY: public_open
 public_open:
@@ -34,21 +34,21 @@ public_save:
 
 .PHONY: public_delete
 public_delete:
-	cd run-containers && terraform destroy
+	cd run-containers && terraform destroy -auto-approve
 
 .PHONY: private_create
 private_create:
 	cp tf.config run-containers/terraform.tfvars
-	cd run-containers && terraform init && terraform apply -var 'image=private' -var 'status=RUNNING'
+	cd run-containers && terraform init && terraform apply -var 'image=private' -var 'status=RUNNING' -auto-approve
 
 .PHONY: private_start
 private_start:
-	cd run-containers && terraform init && terraform apply -var 'image=private' -var 'status=RUNNING'
+	cd run-containers && terraform init && terraform apply -var 'image=private' -var 'status=RUNNING' -auto-approve
 	bash data/private/start.txt
 
 .PHONY: private_stop
 private_stop:
-	cd run-containers && terraform init && terraform apply -var 'image=private' -var 'status=TERMINATED'
+	cd run-containers && terraform init && terraform apply -var 'image=private' -var 'status=TERMINATED' -auto-approve
 
 .PHONY: private_open
 private_open:
@@ -60,21 +60,21 @@ private_save:
 
 .PHONY: private_delete
 private_delete:
-	cd run-containers && terraform destroy
+	cd run-containers && terraform destroy -auto-approve
 
 .PHONY: visualize_create
 visualize_create:
 	cp tf.config run-containers/terraform.tfvars
-	cd run-containers && terraform init && terraform apply -var 'image=visualize' -var 'status=RUNNING'
+	cd run-containers && terraform init && terraform apply -var 'image=visualize' -var 'status=RUNNING' -auto-approve
 
 .PHONY: visualize_start
 visualize_start:
-	cd run-containers && terraform init && terraform apply -var 'image=visualize' -var 'status=RUNNING'
+	cd run-containers && terraform init && terraform apply -var 'image=visualize' -var 'status=RUNNING' -auto-approve
 	bash data/visualize/start.txt
 
 .PHONY: visualize_stop
 visualize_stop:
-	cd run-containers && terraform init && terraform apply -var 'image=visualize' -var 'status=TERMINATED'
+	cd run-containers && terraform init && terraform apply -var 'image=visualize' -var 'status=TERMINATED' -auto-approve
 
 .PHONY: visualize_open
 visualize_open:
@@ -86,4 +86,4 @@ visualize_save:
 
 .PHONY: visualize_delete
 visualize_delete:
-	cd run-containers && terraform destroy
+	cd run-containers && terraform destroy -auto-approve

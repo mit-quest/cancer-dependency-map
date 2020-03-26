@@ -17,12 +17,8 @@ v) PRIVATE_KEY_PATH=${OPTARG};;
 esac
 done
 
-ssh -t -i $PRIVATE_KEY_PATH $USER@$IP << EOF
-  # Build container
-  echo Building the *public* Docker container
-  sudo docker run -d -p $PORT:8888 $HOST_URL/$PROJ_NAME/$FOLDER_NAME/public
+# Build container
+echo Building the *public* Docker container
+ssh -T -i $PRIVATE_KEY_PATH -o UserKnownHostsFile=/dev/null -o CheckHostIP=no -o StrictHostKeyChecking=no $USER@$IP << EOF
+  sudo docker run -d -p $PORT:8888 --mount source=$TRIAL_ID,target=/home/jovyan $HOST_URL/$PROJ_NAME/$FOLDER_NAME/public
 EOF
-
-# Remove IP from ssh known hosts
-echo Removing VM IP from ssh known hosts
-ssh-keygen -R $IP

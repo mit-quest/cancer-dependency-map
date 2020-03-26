@@ -16,8 +16,8 @@ esac
 done
 
 # SSH into VM and execute commands
-echo SSHing into VM and executing commands
-ssh -t -i $PRIVATE_KEY_PATH $USER@$IP << 'EOF'
+echo SSHing into VM and grabbing Jupyter auth token
+ssh -T -i $PRIVATE_KEY_PATH -o UserKnownHostsFile=/dev/null -o CheckHostIP=no -o StrictHostKeyChecking=no $USER@$IP << 'EOF'
   for i in {1..60}
   do
     ping -c1 0.0.0.0
@@ -29,24 +29,23 @@ ssh -t -i $PRIVATE_KEY_PATH $USER@$IP << 'EOF'
         sleep 1
         LINE_COUNT=$(sudo docker exec $CONTAINER_ID jupyter notebook list | wc -l)
         if [ "$LINE_COUNT" -gt "1" ]; then
-          # parse auth token from Docker logs and write to text file
-          echo Grabbing Jupyter authentication token
+          # parse Jupyter auth token from Docker logs and write to text file
           sudo docker exec $CONTAINER_ID jupyter notebook list | grep -o -P '(?<=token=).*(?= :)' > ~/token.txt
 
           exit 0
         fi
       done
-      echo Could not access Jupyter Notebook server within 60 seconds
-      exit 1
+      # Could not access Jupyter Notebook server within 60 seconds
+      exit 2
     fi
   done
-  echo Could not ping Docker container server within 60 seconds
+  # Could not ping Docker container server within 60 seconds
   exit 1
 EOF
 
 # Securely copy the token text from the VM
 echo Copying Jupyter notebook token down to localhost
-scp -i $PRIVATE_KEY_PATH $USER@$IP:~/token.txt $DATA_DIR_PATH/token.txt
+scp -i $PRIVATE_KEY_PATH -o UserKnownHostsFile=/dev/null -o CheckHostIP=no -o StrictHostKeyChecking=no $USER@$IP:~/token.txt $DATA_DIR_PATH/token.txt
 
 # Get the token string
 echo Grabbing Jupyter notebook token
@@ -55,7 +54,3 @@ TOKEN=$(cat $DATA_DIR_PATH/token.txt)
 # Open website
 echo Opening Jupyter notebook website
 xdg-open http://$IP:$PORT/?token=$TOKEN &
-
-# Remove IP from ssh known hosts
-echo Removing VM IP from ssh known hosts
-ssh-keygen -R $IP

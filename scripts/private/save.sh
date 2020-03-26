@@ -17,8 +17,8 @@ esac
 done
 
 # SSH into VM and execute commands
-echo SSHing into VM and executing commands
-ssh -t -i $PRIVATE_KEY_PATH $USER@$IP << EOF
+echo SSHing into VM and uploading JSON to GCP bucket
+ssh -T -i $PRIVATE_KEY_PATH -o UserKnownHostsFile=/dev/null -o CheckHostIP=no -o StrictHostKeyChecking=no $USER@$IP << EOF
   for i in {1..60}
   do
     ping -c1 0.0.0.0
@@ -39,14 +39,10 @@ ssh -t -i $PRIVATE_KEY_PATH $USER@$IP << EOF
           exit 0
         fi
       done
-      echo Could not access Jupyter Notebook server within 60 seconds
-      exit 1
+      # Could not access Jupyter Notebook server within 60 seconds
+      exit 2
     fi
   done
-  echo Could not ping Docker container server within 60 seconds
+  # Could not ping Docker container server within 60 seconds
   exit 1
 EOF
-
-# Remove IP from ssh known hosts
-echo Removing VM IP from ssh known hosts
-ssh-keygen -R $IP
