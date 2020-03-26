@@ -13,11 +13,16 @@ build:
 .PHONY: public_create
 public_create:
 	cp tf.config run-containers/terraform.tfvars
-	cd run-containers && terraform init && terraform apply -var 'image=public'
+	cd run-containers && terraform init && terraform apply -var 'image=public' -var 'status=RUNNING'
 
 .PHONY: public_start
 public_start:
+	cd run-containers && terraform init && terraform apply -var 'image=public' -var 'status=RUNNING'
 	bash data/public/start.txt
+
+.PHONY: public_stop
+public_stop:
+	cd run-containers && terraform init && terraform apply -var 'image=public' -var 'status=TERMINATED'
 
 .PHONY: public_open
 public_open:
@@ -34,11 +39,16 @@ public_delete:
 .PHONY: private_create
 private_create:
 	cp tf.config run-containers/terraform.tfvars
-	cd run-containers && terraform init && terraform apply -var 'image=private'
+	cd run-containers && terraform init && terraform apply -var 'image=private' -var 'status=RUNNING'
 
 .PHONY: private_start
 private_start:
+	cd run-containers && terraform init && terraform apply -var 'image=private' -var 'status=RUNNING'
 	bash data/private/start.txt
+
+.PHONY: private_stop
+private_stop:
+	cd run-containers && terraform init && terraform apply -var 'image=private' -var 'status=TERMINATED'
 
 .PHONY: private_open
 private_open:
@@ -55,11 +65,16 @@ private_delete:
 .PHONY: visualize_create
 visualize_create:
 	cp tf.config run-containers/terraform.tfvars
-	cd run-containers && terraform init && terraform apply -var 'image=visualize'
+	cd run-containers && terraform init && terraform apply -var 'image=visualize' -var 'status=RUNNING'
 
 .PHONY: visualize_start
 visualize_start:
+	cd run-containers && terraform init && terraform apply -var 'image=visualize' -var 'status=RUNNING'
 	bash data/visualize/start.txt
+
+.PHONY: visualize_stop
+visualize_stop:
+	cd run-containers && terraform init && terraform apply -var 'image=visualize' -var 'status=TERMINATED'
 
 .PHONY: visualize_open
 visualize_open:

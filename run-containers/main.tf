@@ -13,6 +13,7 @@ variable "image" {}
 variable "port" {}
 variable "this_dir_path" {}
 variable "trial_id" {}
+variable "status" {}
 
 
 provider "google" {
@@ -101,6 +102,8 @@ resource "google_compute_instance" "vm_instance" {
       host = google_compute_address.vm_static_ip.address
     }
   }
+
+  desired_status = var.status
 }
 
 resource "google_compute_address" "vm_static_ip" {
