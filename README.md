@@ -24,9 +24,11 @@ This repository has only been tested on Ubuntu, so it is possible that filepaths
 1. [Install Terraform](https://learn.hashicorp.com/terraform/gcp/install)
 
 *Important:* This repository requires Terraform 0.12+.
+
 2. [Set up GCP](https://learn.hashicorp.com/terraform/gcp/build)
 
 The suggested path for the downloaded JSON is `~/.gcloud/Terraform.json`.
+
 3. Generate SSH key pair
 
 ```
