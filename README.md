@@ -15,28 +15,38 @@ synthesis and hypothesis testing on publicly available RNA sequencing data. See 
 
 [gene-expression-viz-bridge](https://github.com/mit-quest/gene-expression-viz-bridge) contains code to start the UI to examine the dependencies inferred from the genome simulator. See the [README](https://github.com/mit-quest/gene-expression-viz-bridge/blob/master/README.md) to get started.
 
-Note that `genome-simulator` and `gene-expression-viz-bridge` are [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules), so remember to run `git submodule init` and `git submodule update` after `git clone THIS_REPO`.
+Note that `genome-simulator` and `gene-expression-viz-bridge` are [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 This repository has only been tested on Ubuntu, so it is possible that filepaths will break down on another OS.
 
 ## Getting started
-0. [Intro to Terraform](https://learn.hashicorp.com/terraform/gcp/intro)
-1. [Install Terraform](https://learn.hashicorp.com/terraform/gcp/install)
+0. Clone this repository
+
+```
+cd ~
+git clone https://github.com/mit-quest/cancer-dependency-map.git
+cd ~/cancer-dependency-map
+git submodule init
+git submodule update
+```
+
+1. [Intro to Terraform](https://learn.hashicorp.com/terraform/gcp/intro)
+2. [Install Terraform](https://learn.hashicorp.com/terraform/gcp/install)
 
 *Important:* This repository requires Terraform 0.12+.
 
-2. [Set up GCP](https://learn.hashicorp.com/terraform/gcp/build)
+3. [Set up GCP](https://learn.hashicorp.com/terraform/gcp/build)
 
 The suggested path for the downloaded JSON is `~/.gcloud/Terraform.json`.
 
-3. Generate SSH key pair
+4. Generate SSH key pair
 
 ```
 $ ssh-keygen -f ~/.ssh/gcloud_id_rsa
 # Important: press <Enter> when asked (twice) for a pass-phrase
 ```
 
-4. Edit tf.config
+5. Edit tf.config
 
 Modify the following lines with your specific data.
 ```
@@ -53,7 +63,7 @@ You can also change any of the other variables if you would like, but the defaul
 
 Each subsequent run, you should only need to modify `trial_id`.
 
-5. Build images
+6. Build images
 
 In the repository directory, run
 
@@ -61,7 +71,7 @@ In the repository directory, run
 
 This command creates a VM that builds the Docker images for each experiment.
 
-6. Run containers
+7. Run containers
 
 For each experiment, you will need to run the following commands in order in the repository directory.
 
