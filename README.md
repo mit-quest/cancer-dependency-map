@@ -15,13 +15,15 @@ synthesis and hypothesis testing on publicly available RNA sequencing data. See 
 
 [gene-expression-viz-bridge](https://github.com/mit-quest/gene-expression-viz-bridge) contains code to start the UI to examine the dependencies inferred from the genome simulator. See the [README](https://github.com/mit-quest/gene-expression-viz-bridge/blob/master/README.md) to get started.
 
-Note that `genome-simulator` and `gene-expression-viz-bridge` are [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules), so remember to run `git submodule init` and `git submodule update` after `git clone ____`.
+Note that `genome-simulator` and `gene-expression-viz-bridge` are [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules), so remember to run `git submodule init` and `git submodule update` after `git clone THIS_REPO`.
+
+This repository has only been tested on Ubuntu, so it is possible that filepaths will break down on another OS.
 
 ## Getting started
 0. [Intro to Terraform](https://learn.hashicorp.com/terraform/gcp/intro)
 1. [Install Terraform](https://learn.hashicorp.com/terraform/gcp/install)
 
-This repository has only been tested on Ubuntu, it is possible that filepaths will break down on another OS.
+*Important:* This repository requires Terraform 0.12+.
 2. [Set up GCP](https://learn.hashicorp.com/terraform/gcp/build)
 
 The suggested path for the downloaded JSON is `~/.gcloud/Terraform.json`.
@@ -55,13 +57,11 @@ In the repository directory, run
 
 `make build`
 
-This command creates a VM that builds the Docker images for each experiment. Shortly after running the command, you will need to type `yes` to give permission to Terraform and/or SSH.
+This command creates a VM that builds the Docker images for each experiment.
 
 6. Run containers
 
 For each experiment, you will need to run the following commands in order in the repository directory.
-
-*Important*: Shortly after running each command, you may need to type `yes` to give permission to Terraform and/or SSH.
 
 *Disclaimer*: You must start and finish your current experiment before running another one.
 
