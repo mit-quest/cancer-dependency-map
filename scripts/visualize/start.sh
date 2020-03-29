@@ -23,7 +23,7 @@ ssh -T -i $PRIVATE_KEY_PATH -o UserKnownHostsFile=/dev/null -o CheckHostIP=no -o
   sudo docker run -dit -p $PORT:3449 $HOST_URL/$PROJ_NAME/$FOLDER_NAME/visualize
 
   # Copy JSON from GCP Bucket down to VM
-  gsutil cp gs://$FOLDER_NAME-bucket-$USER/private/$TRIAL_ID.json ~/results-Bridge-demo-Arac-part.json
+  /snap/bin/gsutil cp gs://$FOLDER_NAME-bucket-$USER/private/$TRIAL_ID.json ~/results-Bridge-demo-Arac-part.json
 
   for i in {1..60}
   do
