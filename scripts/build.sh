@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 
 # Read variables from arguments
@@ -15,7 +16,7 @@ done
 
 # Create GCP bucket for data transfer across experiments
 echo Creating GCP bucket
-gsutil mb gs://$FOLDER_NAME-bucket-$USER/
+/snap/bin/gsutil mb gs://$FOLDER_NAME-bucket-$USER
 
 # Install Docker
 echo Installing docker
@@ -30,7 +31,7 @@ echo Pulling probcomp/notebook docker image from the official Docker Hub
 sudo docker pull probcomp/notebook
 
 # Navigate to the experiments in the uploaded repository
-cd experiments
+cd ~/experiments
 
 # Build and push the *public* image
 echo Building the *public* docker image

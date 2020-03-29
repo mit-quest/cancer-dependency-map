@@ -34,7 +34,7 @@ ssh -T -i $PRIVATE_KEY_PATH -o UserKnownHostsFile=/dev/null -o CheckHostIP=no -o
           sudo docker cp \$CONTAINER_ID:/home/jovyan/cmi-results/results-Bridge-demo-Arac-part.json ~/
 
           # copy output JSON from VM to the GCP bucket
-          gsutil cp ~/results-Bridge-demo-Arac-part.json gs://$FOLDER_NAME-bucket-$USER/private/$TRIAL_ID.json
+          /snap/bin/gsutil cp ~/results-Bridge-demo-Arac-part.json gs://$FOLDER_NAME-bucket-$USER/private/$TRIAL_ID.json
 
           exit 0
         fi

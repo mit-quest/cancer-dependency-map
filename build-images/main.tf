@@ -9,7 +9,12 @@ variable "project" {}
 variable "credentials_file_path" {}
 variable "public_key_path" {}
 variable "private_key_path" {}
+variable "image" {}
+variable "port" {}
 variable "this_dir_path" {}
+variable "trial_id" {}
+variable "status" {}
+
 
 provider "google" {
   region = var.region
