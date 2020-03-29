@@ -1,17 +1,15 @@
 #!/bin/bash
 set -e
 
-while getopts c:j:h:p:t:f: option
+# Read variables from arguments
+while getopts c:f:h:j: option
 do
 case "${option}"
 in
 c) CRED_PATH=${OPTARG};;
-j) PROJ_NAME=${OPTARG};;
-h) HOST_URL=${OPTARG};;
-p) PORT=${OPTARG};;
-t) TRIAL_ID=${OPTARG};;
 f) FOLDER_NAME=${OPTARG};;
-u) USER=${OPTARG};;
+h) HOST_URL=${OPTARG};;
+j) PROJ_NAME=${OPTARG};;
 esac
 done
 

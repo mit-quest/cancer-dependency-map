@@ -79,20 +79,20 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   provisioner "local-exec" {
-    command = "echo bash ${var.this_dir_path}/scripts/${var.image}/start.sh -c ~/Terraform.json -i ${google_compute_address.vm_static_ip.address} -j ${var.project} -h ${var.host_name} -p ${var.port} -t ${var.trial_id} -f ${var.folder_name} -u ${var.username} -v ${var.private_key_path} > ${var.this_dir_path}/data/${var.image}/start.txt"
+    command = "echo bash ${var.this_dir_path}/scripts/${var.image}/start.sh -d ${var.this_dir_path} -f ${var.folder_name} -h ${var.host_name} -i ${google_compute_address.vm_static_ip.address} -j ${var.project} -p ${var.port} -t ${var.trial_id} -u ${var.username} -v ${var.private_key_path} > ${var.this_dir_path}/data/${var.image}/start.txt"
   }
 
   provisioner "local-exec" {
-    command = "echo bash ${var.this_dir_path}/scripts/${var.image}/open.sh -i ${google_compute_address.vm_static_ip.address} -p ${var.port} -u ${var.username} -v ${var.private_key_path} -d ${var.this_dir_path}/data/${var.image} -t ${var.trial_id} -f ${var.folder_name} > ${var.this_dir_path}/data/${var.image}/open.txt"
+    command = "echo bash ${var.this_dir_path}/scripts/${var.image}/open.sh -d ${var.this_dir_path} -i ${google_compute_address.vm_static_ip.address} -p ${var.port} > ${var.this_dir_path}/data/${var.image}/open.txt"
   }
 
   provisioner "local-exec" {
-    command = "echo bash ${var.this_dir_path}/scripts/${var.image}/save.sh -i ${google_compute_address.vm_static_ip.address} -p ${var.port} -u ${var.username} -v ${var.private_key_path} -d ${var.this_dir_path}/data/${var.image} -t ${var.trial_id} -f ${var.folder_name} > ${var.this_dir_path}/data/${var.image}/save.txt"
+    command = "echo bash ${var.this_dir_path}/scripts/${var.image}/save.sh -f ${var.folder_name} -i ${google_compute_address.vm_static_ip.address} -p ${var.port} -t ${var.trial_id} -u ${var.username} -v ${var.private_key_path} > ${var.this_dir_path}/data/${var.image}/save.txt"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "bash ~/create.sh -c ~/Terraform.json -j ${var.project} -h ${var.host_name} -p ${var.port} -t ${var.trial_id} -f ${var.folder_name} -u ${var.username}"
+      "bash ~/create.sh -c ~/Terraform.json -f ${var.folder_name} -h ${var.host_name} -j ${var.project}"
     ]
     connection {
       user = var.username

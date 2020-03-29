@@ -2,17 +2,16 @@
 set -e
 
 # Read variables from arguments
-while getopts i:p:u:v:d:t:f: option
+while getopts f:i:p:t:u:v: option
 do
 case "${option}"
 in
+f) FOLDER_NAME=${OPTARG};;
 i) IP=${OPTARG};;
 p) PORT=${OPTARG};;
+t) TRIAL_ID=${OPTARG};;
 u) USER=${OPTARG};;
 v) PRIVATE_KEY_PATH=${OPTARG};;
-d) DATA_DIR_PATH=${OPTARG};;
-t) TRIAL_ID=${OPTARG};;
-f) FOLDER_NAME=${OPTARG};;
 esac
 done
 

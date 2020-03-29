@@ -1,24 +1,23 @@
 #!/bin/bash
 set -e
 
-while getopts c:i:j:h:p:t:f:u:v: option
+while getopts d:f:h:i:j:p:t:u:v: option
 do
 case "${option}"
 in
-c) CRED_PATH=${OPTARG};;
+d) THIS_DIR_PATH=${OPTARG};;
+f) FOLDER_NAME=${OPTARG};;
+h) HOST_URL=${OPTARG};;
 i) IP=${OPTARG};;
 j) PROJ_NAME=${OPTARG};;
-h) HOST_URL=${OPTARG};;
 p) PORT=${OPTARG};;
 t) TRIAL_ID=${OPTARG};;
-f) FOLDER_NAME=${OPTARG};;
 u) USER=${OPTARG};;
 v) PRIVATE_KEY_PATH=${OPTARG};;
 esac
 done
 
-# Build container
-echo Building the *visualize* Docker container
+echo Building the *visualize* Docker container, downloading JSON from GCP bucket
 ssh -T -i $PRIVATE_KEY_PATH -o UserKnownHostsFile=/dev/null -o CheckHostIP=no -o StrictHostKeyChecking=no $USER@$IP << EOF
   # Build the Docker container
   sudo docker run -dit -p $PORT:3449 $HOST_URL/$PROJ_NAME/$FOLDER_NAME/visualize
