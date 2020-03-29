@@ -1,13 +1,16 @@
 # cancer-dependency-map
 
 ## Intro
-This project automates running computationally-expensive probabilistic computing experiments on Google Cloud Platform (GCP). See the "Getting started" section for further instructions for getting this project up and running.
+This project automates running computationally-expensive probabilistic computing experiments on Google Cloud Platform (GCP). See the **Getting started** section for further instructions for running this project.
 
-This repository contains 3 distinct codebases/experiments:
+The code has only been tested on Ubuntu 18.04, so it could break on another OS.
+
+This repository contains 3 distinct experiments, all located in the `experiments` directory.
 * `public`
 
-[gene-expression-public](/gene-expression-public) contains code to perform probabilistic program
-synthesis and hypothesis testing on publicly available RNA sequencing data. See the [README](/gene-expression-public/README.md) and the [start-here](/gene-expression-public/start-here.ipynb) notebook to get started.
+  [gene-expression-public](/experiments/gene-expression-public) contains code to perform probabilistic program
+  synthesis and hypothesis testing on publicly available RNA sequencing data. See the [README](/experiments/gene-expression-public/README.md) and the [start-here](/experiments/gene-expression-public/start-here.ipynb) notebook to get started.
+
 * `private`
 
 [genome-simulator](https://github.com/mit-quest/genome-simulator/) contains code to infer a probabilistic program of a genome and compute dependencies that can be used in the visualization. See the [synthesis demo notebook](https://github.com/mit-quest/genome-simulator/blob/master/synthesis-demo-with-one-part-Bridge.ipynb) to get started.
@@ -16,8 +19,6 @@ synthesis and hypothesis testing on publicly available RNA sequencing data. See 
 [gene-expression-viz-bridge](https://github.com/mit-quest/gene-expression-viz-bridge) contains code to start the UI to examine the dependencies inferred from the genome simulator. See the [README](https://github.com/mit-quest/gene-expression-viz-bridge/blob/master/README.md) to get started.
 
 Note that `genome-simulator` and `gene-expression-viz-bridge` are [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
-
-This repository has only been tested on Ubuntu, so it is possible that filepaths will break down on another OS.
 
 ## Getting started
 0. **Clone this repository**
@@ -66,11 +67,11 @@ This repository has only been tested on Ubuntu, so it is possible that filepaths
 
 6. **Build images**
 
-  In the repository directory, run
+  To build and save the Docker images for all experiments you will need to run the following command in the repository directory.
 
   * `make build`
 
-    This command creates a VM that builds the Docker images for each experiment.
+    Create a VM that builds the Docker images for each experiment and pushes them to the GCP registry.
 
 7. **Run containers**
 
