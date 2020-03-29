@@ -20,81 +20,86 @@ Note that `genome-simulator` and `gene-expression-viz-bridge` are [git submodule
 This repository has only been tested on Ubuntu, so it is possible that filepaths will break down on another OS.
 
 ## Getting started
-0. Clone this repository
+0. **Clone this repository**
 
-```
-cd ~
-git clone https://github.com/mit-quest/cancer-dependency-map.git
-cd ~/cancer-dependency-map
-git submodule init
-git submodule update
-```
+  ```
+  cd ~
+  git clone https://github.com/mit-quest/cancer-dependency-map.git
+  cd ~/cancer-dependency-map
+  git submodule init
+  git submodule update
+  ```
 
-1. [Intro to Terraform](https://learn.hashicorp.com/terraform/gcp/intro)
-2. [Install Terraform](https://learn.hashicorp.com/terraform/gcp/install)
+1. **[Intro to Terraform](https://learn.hashicorp.com/terraform/gcp/intro)**
 
-*Important:* This repository requires Terraform 0.12+.
+2. **[Install Terraform](https://learn.hashicorp.com/terraform/gcp/install)**
 
-3. [Set up GCP](https://learn.hashicorp.com/terraform/gcp/build)
+  This repository requires Terraform 0.12+.
 
-The suggested path for the downloaded JSON is `~/.gcloud/Terraform.json`.
+3. **[Set up GCP](https://learn.hashicorp.com/terraform/gcp/build)**
 
-4. Generate SSH key pair
+  The suggested path for the downloaded JSON is `~/.gcloud/Terraform.json`.
 
-```
-$ ssh-keygen -f ~/.ssh/gcloud_id_rsa
-# Important: press <Enter> when asked (twice) for a pass-phrase
-```
+4. **Generate SSH key pair**
 
-5. Edit tf.config
+  ```
+  $ ssh-keygen -f ~/.ssh/gcloud_id_rsa
+  # Important: press <Enter> when asked (twice) for a pass-phrase
+  ```
 
-Modify the following lines with your specific data.
-```
-trial_id = NAME_OF_CURRENT_TRIAL_RUN
-this_dir_path = PATH_TO_WHERE_YOU_INSTALLED_THIS_REPO
-username = YOUR_GCP_USERNAME
-project = YOUR_GCP_PROJECT_ID
-credentials_file_path = PATH_TO_YOUR_GCP_SERVICE_ACCOUNT_KEY_JSON
-public_key_path = PATH_TO_YOUR_SSH_PUBLIC_KEY
-private_key_path = PATH_TO_YOUR_SSH_PRIVATE_KEY
-```
+5. **Edit tf.config**
 
-You can also change any of the other variables if you would like, but the default values should work just fine.
+  Modify the following lines with your specific data.
+  ```
+  trial_id = NAME_OF_CURRENT_TRIAL_RUN
+  this_dir_path = PATH_TO_WHERE_YOU_INSTALLED_THIS_REPO
+  username = YOUR_GCP_USERNAME
+  project = YOUR_GCP_PROJECT_ID
+  credentials_file_path = PATH_TO_YOUR_GCP_SERVICE_ACCOUNT_KEY_JSON
+  public_key_path = PATH_TO_YOUR_SSH_PUBLIC_KEY
+  private_key_path = PATH_TO_YOUR_SSH_PRIVATE_KEY
+  ```
 
-Each subsequent run, you should only need to modify `trial_id`.
+  You can also change any of the other variables if you would like, but the default values should work just fine.
 
-6. Build images
+  For each subsequent run, you should only need to modify `trial_id`.
 
-In the repository directory, run
+6. **Build images**
 
-`make build`
+  In the repository directory, run
 
-This command creates a VM that builds the Docker images for each experiment.
+  * `make build`
 
-7. Run containers
+    This command creates a VM that builds the Docker images for each experiment.
 
-For each experiment, you will need to run the following commands in order in the repository directory.
+7. **Run containers**
 
-*Disclaimer*: You must start and finish your current experiment before running another one.
+  For each experiment, you will need to run the following commands in order in the repository directory.
 
-Using `public` as an example,
+  *Disclaimer*: You must start and finish your current experiment before running another one.
 
-`make public_create`
+  Using the experiment `public` as an example,
 
-This creates the VM, its related GCP resources, and installs any necessary dependencies on the VM.
+  * `make public_create`
 
-`make public_start`
+    Create the VM, build its related GCP resources, and install dependencies on the VM.
 
-This creates the Docker container and runs its internal server.
+  * `make public_start`
 
-`make public_open`
+    Start a Docker container and run its internal experiment.
 
-This opens a local browser to the Docker container's internal server. You can now begin running your computational experiment.
+  * `make public_stop`
 
-`make public_save`
+    Pause the VM, which shuts down the Docker container. *Shutting down the Docker container will not erase your saved changes since they are kept with the VM.*
 
-This saves the experiment's results to a GCP bucket. (Not all experiments create data that needs to be saved.)
+  * `make public_open`
 
-`make public_delete`
+    Open a local browser to the Docker container's internal server so the user can begin running experiments.
 
-This deletes the VM and its related GCP resources.
+  * `make public_save`
+
+    Save the experiment's output to a GCP bucket. (Not all experiments create data that needs to be saved.)
+
+  * `make public_delete`
+
+    Delete the VM and its related GCP resources.
