@@ -1,0 +1,1 @@
+bash /home/julius/cancer-dependency-map/scripts/public/save.sh -i 34.69.56.152 -p 8080 -u juliust -v /home/julius/.ssh/gcloud_id_rsa -d /home/julius/cancer-dependency-map/data/public -t test-1 -f cancer-dependency-map

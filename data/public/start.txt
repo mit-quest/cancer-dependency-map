@@ -1,0 +1,1 @@
+bash /home/julius/cancer-dependency-map/scripts/public/start.sh -c /home/julius/Terraform.json -i 34.69.56.152 -j bridge-urops -h us.gcr.io -p 8080 -t test-1 -f cancer-dependency-map -u juliust -v /home/julius/.ssh/gcloud_id_rsa
