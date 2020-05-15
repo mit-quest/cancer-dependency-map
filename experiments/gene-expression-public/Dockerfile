@@ -17,8 +17,6 @@ ADD synthesized-programs.clj /home/jovyan/work/
 
 # Change permissions.
 USER root
-RUN chmod 777 /home/jovyan/start-here.ipynb
-RUN chmod 777 /home/jovyan/work/data-preprocessing.ipynb
-RUN chmod 777 /home/jovyan/work/RNAseq-synthesis-and-hypothesis-testing.ipynb
+RUN chmod 777 /home/jovyan/
 
 USER jovyan
