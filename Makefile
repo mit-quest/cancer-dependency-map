@@ -17,6 +17,7 @@ public_create:
 
 .PHONY: public_start
 public_start:
+	cp tf.config run-containers/terraform.tfvars
 	cd run-containers && terraform init && terraform apply -var 'image=public' -var 'status=RUNNING' -auto-approve
 	bash data/public/start.txt
 
@@ -43,6 +44,7 @@ private_create:
 
 .PHONY: private_start
 private_start:
+	cp tf.config run-containers/terraform.tfvars
 	cd run-containers && terraform init && terraform apply -var 'image=private' -var 'status=RUNNING' -auto-approve
 	bash data/private/start.txt
 
@@ -69,6 +71,7 @@ visualize_create:
 
 .PHONY: visualize_start
 visualize_start:
+	cp tf.config run-containers/terraform.tfvars
 	cd run-containers && terraform init && terraform apply -var 'image=visualize' -var 'status=RUNNING' -auto-approve
 	bash data/visualize/start.txt
 
