@@ -1,5 +1,8 @@
 # cancer-dependency-map
 
+## For Future Devs
+https://docs.google.com/document/d/1YhYWo3PuyuZEE7OTFxbVL6XJ_YH1O3Z5HTdOkvXdsUA/edit?usp=sharing
+
 ## Intro
 This project automates running computationally-expensive probabilistic computing experiments with [MIT Probabilistic Computing Project](http://probcomp.csail.mit.edu/) libraries on Google Cloud Platform (GCP). See the **Getting started** section for further instructions for running this project.
 
